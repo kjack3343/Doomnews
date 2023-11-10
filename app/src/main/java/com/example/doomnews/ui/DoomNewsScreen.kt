@@ -29,6 +29,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -62,14 +63,17 @@ fun DoomNewsApp(
             contentType = DoomNewsContentType.LIST_ONLY
 
         }
+
         WindowWidthSizeClass.Medium -> {
             contentType = DoomNewsContentType.LIST_ONLY
 
         }
+
         WindowWidthSizeClass.Expanded -> {
             contentType = DoomNewsContentType.LIST_ONLY
 
         }
+
         else -> {
             contentType = DoomNewsContentType.LIST_ONLY
 
@@ -79,51 +83,51 @@ fun DoomNewsApp(
     Scaffold(
         topBar = {
             DoomNewsAppBar(
+                isShowingListPage = uiState.isShowingListPage,
                 onBackButtonClick = { viewModel.navigateToListPage() },
-                isShowingListPage = uiState.isShowingListPage
             )
         }
     ) { innerPadding ->
-       if(contentType == DoomNewsContentType.LIST_AND_DETAIL){
-           DoomNewsListAndDetails(
-               articles = uiState.articlesList,
-               onClick= {
-                   viewModel.updateCurrentArticle(it)
-               },
-               selectedArticle = uiState.currentArticle,
-               contentPadding = innerPadding,
-               modifier = Modifier.fillMaxWidth()
-           )
-       }else{
-    if (uiState.isShowingListPage){
-        DoomNewsList(
-            articles = uiState.articlesList,
-            onClick = {
-                      viewModel.updateCurrentArticle(it)
-                    viewModel.navigateToDetailPage()
-            },
-            contentPadding = innerPadding,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    top = dimensionResource(R.dimen.padding_medium),
-                    start = dimensionResource(R.dimen.padding_medium),
-                    end = dimensionResource(R.dimen.padding_medium),
-                )
-        )
-    }else {
-        DoomNewsDetail(
-            selectedArticle = uiState.currentArticle,
-            contentPadding = innerPadding,
-            onBackPressed = {
-                viewModel.navigateToListPage()
-            }
+        if (contentType == DoomNewsContentType.LIST_AND_DETAIL) {
+            DoomNewsListAndDetails(
+                articles = uiState.articlesList,
+                onClick = {
+                    viewModel.updateCurrentArticle(it)
+                },
+                selectedArticle = uiState.currentArticle,
+                contentPadding = innerPadding,
+                modifier = Modifier.fillMaxWidth()
             )
-    }
+        } else {
+            if (uiState.isShowingListPage) {
+                DoomNewsList(
+                    articles = uiState.articlesList,
+                    onClick = {
+                        viewModel.updateCurrentArticle(it)
+                        viewModel.navigateToDetailPage()
+                    },
+                    contentPadding = innerPadding,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            top = dimensionResource(R.dimen.padding_medium),
+                            start = dimensionResource(R.dimen.padding_medium),
+                            end = dimensionResource(R.dimen.padding_medium),
+                        )
+                )
+            } else {
+                DoomNewsDetail(
+                    selectedArticle = uiState.currentArticle,
+                    contentPadding = innerPadding,
+                    onBackPressed = {
+                        viewModel.navigateToListPage()
+                    }
+                )
+            }
 
+        }
     }
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DoomNewsAppBar(
@@ -153,7 +157,7 @@ fun DoomNewsAppBar(
         } else {
             { Box {} }
         },
-        //colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary),
+        colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primary),
         modifier = modifier,
     )
 }
@@ -174,7 +178,7 @@ fun DoomNewsList(
             DoomNewsListItem(
                 newsArticle = article,
                 onItemClick = onClick,
-                //modifier = Modifier.padding(8.dp)
+                modifier = Modifier.padding(8.dp)
             )
         }
     }
